@@ -5,6 +5,8 @@
 
 typedef struct _Player{
 	WINDOW* win;
+	WINDOW* msgbox;
+	int score;
 	int y;
 	int x;
 	int max_y;
@@ -12,7 +14,7 @@ typedef struct _Player{
 	char glyph;
 } Player;
 
-Player new_player(WINDOW* win, int y, int x, char glyph, int color);
+Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph);
 
 int get_player_action(Player* p);
 

@@ -3,9 +3,13 @@
 
 #include <ncurses.h>
 #include "player.h"
+#include "entities.h"
+#include "colors.h"
 
 typedef struct _Player{
 	WINDOW* win;
+	WINDOW* msgbox;
+	int score;
 	int y;
 	int x;
 	int max_y;
@@ -13,16 +17,17 @@ typedef struct _Player{
 	char glyph;
 } Player;
 
-Player new_player(WINDOW* win, int y, int x, char glyph, int color){
+Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph){
 	Player p;
 	p.win = win;
+	p.msgbox = msgbox;
+	p.score = 0;
 	getmaxyx(p.win, p.max_y, p.max_x);
 	p.max_y -= 2;
 	p.max_x -= 2;
 	p.y = y;
 	p.x = x;
 	p.glyph = glyph;
-	init_pair(1, color, COLOR_BLACK);
 
 	return p;
 }
@@ -53,8 +58,10 @@ void move_right(Player* p){
 }
 
 int get_player_action(Player* p){
-	int retv;
-	switch(retv = wgetch(p->win)){
+	int retv = wgetch(p->win);
+	mvwaddch(p->win, p->y, p->x, ' ');
+	refresh();
+	switch(retv){
 		case KEY_UP:
 			move_up(p);
 			break;
@@ -71,13 +78,17 @@ int get_player_action(Player* p){
 			break;
 	}
 
+	if((char)mvwinch(p->win, p->y, p->x) == '*'){
+		take_gold(p->msgbox, &(p->score));
+	}
+
 	return retv;
 }
 
 void draw_player(Player p){
-	wattron(p.win, COLOR_PAIR(1));
+	wattron(p.win, COLOR_PLAYER);
 	mvwprintw(p.win, p.y, p.x, "%c", p.glyph);
-	wattroff(p.win, COLOR_PAIR(1));
+	wattroff(p.win, COLOR_PLAYER);
 }
 
 #endif

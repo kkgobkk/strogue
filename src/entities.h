@@ -5,6 +5,6 @@
 
 void spawn_gold();
 
-int take_gold(WINDOW* msg_win);
+int take_gold(WINDOW* msg_win, int* score);
 
 #endif

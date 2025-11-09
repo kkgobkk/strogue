@@ -3,7 +3,6 @@
 
 #include <ncurses.h>
 #include "player.h"
-#include "entities.h"
 #include "colors.h"
 
 typedef struct _Player{
@@ -30,6 +29,16 @@ Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph){
 	p.glyph = glyph;
 
 	return p;
+}
+
+int take_gold(WINDOW* msg_win, int* score){
+	int amount = rand() % 126 + 25;
+	wclear(msg_win);
+	box(msg_win, 0, 0);
+	wattron(msg_win, COLOR_GOLD);
+	mvwprintw(msg_win, 1, 5, "you pick up %d gold coins", amount);
+	wattroff(msg_win, COLOR_GOLD);
+	*score += amount;
 }
 
 

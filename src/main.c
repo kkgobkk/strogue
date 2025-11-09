@@ -39,14 +39,27 @@ int main(void){
 	keypad(play_win, true);
 	box(play_win, 0, 0);
 	box(message_box, 0, 0);
+
 	Player p = new_player(play_win, message_box, play_y/2, play_x/2, '@');
 	int turn = 0;
+	Enemy enemy_arr[MAX_ENEMIES];
+	size_t enemy_num = 0;
 
 	//game loop
 	do{
 		turn ++;
 		if(rand() % 50 == 0)
 			spawn_gold(play_win);
+		if(rand() % 10 == 0 && enemy_num < MAX_ENEMIES){
+			spawn_enemy(play_win, enemy_arr, &enemy_num);
+			mvwprintw(message_box, 1, 1, "enemy num:%ld", enemy_num);
+		}
+
+		//handle enemies
+		update_enemy_position(enemy_arr, enemy_num, p);
+		for(size_t i = 0; i < enemy_num; i++){
+			draw_enemy(play_win, enemy_arr[i]);
+		}
 
 		draw_player(p);
 

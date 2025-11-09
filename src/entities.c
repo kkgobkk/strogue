@@ -1,6 +1,12 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include "colors.h"
+#include "player.h"
+
+typedef struct _Enemy{
+	int y;
+	int x;
+} Enemy;
 
 void spawn_gold(WINDOW* play_win){
 	int max_y, max_x;
@@ -18,12 +24,47 @@ void spawn_gold(WINDOW* play_win){
 	wattroff(play_win, COLOR_GOLD);
 }
 
-int take_gold(WINDOW* msg_win, int* score){
-	int amount = rand() % 126 + 25;
-	wclear(msg_win);
-	box(msg_win, 0, 0);
-	wattron(msg_win, COLOR_GOLD);
-	mvwprintw(msg_win, 1, 5, "you pick up %d gold coins", amount);
-	wattroff(msg_win, COLOR_GOLD);
-	*score += amount;
+void spawn_enemy(WINDOW* play_win, Enemy* enemy_arr, size_t* enemy_number){
+	int max_y, max_x;
+	getmaxyx(play_win, max_y, max_x);
+	max_y -= 2;
+	max_x -= 2;
+	
+	Enemy new_enemy = {
+		rand() % max_y + 1,
+		rand() % max_x + 1,
+	};
+
+	enemy_arr[*enemy_number] = new_enemy;
+	*enemy_number = *enemy_number + 1;
+}
+
+void update_enemy_position(Enemy* enemy_arr, size_t enemy_number, Player p){
+	int distance_y, distance_x;
+	for(size_t i = 0; i < enemy_number; i++){
+		mvwaddch(p.win, enemy_arr[i].y, enemy_arr[i].x, ' ');
+		distance_y = enemy_arr[i].y - p.y;
+		distance_x = enemy_arr[i].x - p.x;
+
+		if(distance_y < 0)
+			enemy_arr[i].y ++;
+		else if(distance_y > 0)
+			enemy_arr[i].y --;
+
+		if(distance_x < 0)
+			enemy_arr[i].x ++;
+		else if(distance_x > 0)
+			enemy_arr[i].x --;
+	}
+}
+
+void draw_enemy(WINDOW* play_win, Enemy e){
+	wattron(play_win, COLOR_ENEMY);
+	mvwprintw(
+		play_win,
+		e.y,
+		e.x,
+		"%c", 'E'
+	);
+	wattroff(play_win, COLOR_ENEMY);
 }

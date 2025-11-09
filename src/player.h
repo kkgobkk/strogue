@@ -16,6 +16,8 @@ typedef struct _Player{
 
 Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph);
 
+int take_gold(WINDOW* msg_win, int* score);
+
 int get_player_action(Player* p);
 
 void draw_player(Player p);

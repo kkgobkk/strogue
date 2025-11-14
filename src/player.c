@@ -2,8 +2,9 @@
 #define LIB_PLAYER_H
 
 #include <ncurses.h>
+#include <stdlib.h>
 #include "player.h"
-#include "colors.h"
+#include "console.h"
 
 typedef struct _Player{
 	WINDOW* win;
@@ -14,6 +15,7 @@ typedef struct _Player{
 	int max_y;
 	int max_x;
 	char glyph;
+	unsigned int alive;
 } Player;
 
 Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph){
@@ -27,6 +29,7 @@ Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph){
 	p.y = y;
 	p.x = x;
 	p.glyph = glyph;
+	p.alive = 1;
 
 	return p;
 }
@@ -41,6 +44,9 @@ int take_gold(WINDOW* msg_win, int* score){
 	*score += amount;
 }
 
+void kill_player(Player *p){
+	p->alive = 0;
+}
 
 void move_up(Player* p){
 	p->y --;
@@ -71,18 +77,52 @@ int get_player_action(Player* p){
 	mvwaddch(p->win, p->y, p->x, ' ');
 	refresh();
 	switch(retv){
+		case VI_KEYS_N:
 		case KEY_UP:
 			move_up(p);
 			break;
-		case KEY_DOWN:
-			move_down(p);
+
+		case VI_KEYS_NE:
+			move_up(p);
+			move_right(p);
 			break;
-		case KEY_LEFT:
-			move_left(p);
-			break;
+		
+		case VI_KEYS_E:
 		case KEY_RIGHT:
 			move_right(p);
 			break;
+
+		case VI_KEYS_SE:
+			move_down(p);
+			move_right(p);
+			break;
+
+		case VI_KEYS_S:
+		case KEY_DOWN:
+			move_down(p);
+			break;
+
+		case VI_KEYS_SW:
+			move_down(p);
+			move_left(p);
+			break;
+
+		case VI_KEYS_W:
+		case KEY_LEFT:
+			move_left(p);
+			break;
+
+		case VI_KEYS_NW:
+			move_up(p);
+			move_left(p);
+			break;
+
+		case 'q':
+			if(p->alive){
+				kill_player(p);
+			}
+			break;
+			
 		default:
 			break;
 	}

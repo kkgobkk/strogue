@@ -15,7 +15,7 @@ void spawn_gold(WINDOW* play_win);
 
 void spawn_enemy(WINDOW* play_win, Enemy* enemy_arr, size_t* enemy_number);
 
-void update_enemy_position(Enemy* enemy_arr, size_t enemy_number, Player p);
+void update_enemy_position(Enemy* enemy_arr, size_t* enemy_number, Player* p);
 
 void draw_enemy(WINDOW* play_win, Enemy e);
 

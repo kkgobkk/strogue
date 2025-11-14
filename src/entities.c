@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <ncurses.h>
-#include "colors.h"
+#include "console.h"
 #include "player.h"
 
 typedef struct _Enemy{
@@ -14,6 +14,7 @@ void spawn_gold(WINDOW* play_win){
 	max_y -= 2;
 	max_x -= 2;
 
+	wattron(play_win, A_BOLD);
 	wattron(play_win, COLOR_GOLD);
 	mvwprintw(
 		play_win,
@@ -21,6 +22,7 @@ void spawn_gold(WINDOW* play_win){
 		rand() % max_x + 1,
 		"%c", '*'
 	);
+	wattroff(play_win, A_BOLD);
 	wattroff(play_win, COLOR_GOLD);
 }
 
@@ -39,22 +41,40 @@ void spawn_enemy(WINDOW* play_win, Enemy* enemy_arr, size_t* enemy_number){
 	*enemy_number = *enemy_number + 1;
 }
 
-void update_enemy_position(Enemy* enemy_arr, size_t enemy_number, Player p){
+void update_enemy_position(Enemy* enemy_arr, size_t* enemy_number, Player* p){
 	int distance_y, distance_x;
-	for(size_t i = 0; i < enemy_number; i++){
-		mvwaddch(p.win, enemy_arr[i].y, enemy_arr[i].x, ' ');
-		distance_y = enemy_arr[i].y - p.y;
-		distance_x = enemy_arr[i].x - p.x;
+	size_t i = 0;
+	while(i < *enemy_number){
+		if(enemy_arr[i].y == p->y && enemy_arr[i].x == p->x){
+			for(size_t j = i; j < *enemy_number-1; j++){
+				enemy_arr[j] = enemy_arr[j+1];
+			}
 
-		if(distance_y < 0)
-			enemy_arr[i].y ++;
-		else if(distance_y > 0)
-			enemy_arr[i].y --;
+			(*enemy_number)--;
 
-		if(distance_x < 0)
-			enemy_arr[i].x ++;
-		else if(distance_x > 0)
-			enemy_arr[i].x --;
+			if(i >= *enemy_number)
+				break;
+		}
+		else{
+			mvwaddch(p->win, enemy_arr[i].y, enemy_arr[i].x, ' ');
+			distance_y = enemy_arr[i].y - p->y;
+			distance_x = enemy_arr[i].x - p->x;
+
+			if(distance_y < 0)
+				enemy_arr[i].y ++;
+			else if(distance_y > 0)
+				enemy_arr[i].y --;
+
+			if(distance_x < 0)
+				enemy_arr[i].x ++;
+			else if(distance_x > 0)
+				enemy_arr[i].x --;
+
+			if(enemy_arr[i].y == p->y && enemy_arr[i].x == p->x)
+				kill_player(p);
+
+			i++;
+		}
 	}
 }
 

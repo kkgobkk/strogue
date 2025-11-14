@@ -12,11 +12,14 @@ typedef struct _Player{
 	int max_y;
 	int max_x;
 	char glyph;
+	unsigned int alive;
 } Player;
 
 Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph);
 
 int take_gold(WINDOW* msg_win, int* score);
+
+void kill_player(Player* p);
 
 int get_player_action(Player* p);
 

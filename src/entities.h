@@ -4,19 +4,16 @@
 #include <ncurses.h>
 #include "player.h"
 
-#define MAX_ENEMIES 5
+#define MAX_ENEMIES 20
+#define MAX_GOLD 20
 
-typedef struct _Enemy{
+typedef struct _Entity{
 	int y;
 	int x;
-} Enemy;
+} Entity;
 
-void spawn_gold(WINDOW* play_win);
+void update_enemy_position(Entity* enemy_arr, size_t* enemy_number, Player* p, short** map);
 
-void spawn_enemy(WINDOW* play_win, Enemy* enemy_arr, size_t* enemy_number);
-
-void update_enemy_position(Enemy* enemy_arr, size_t* enemy_number, Player* p);
-
-void draw_enemy(WINDOW* play_win, Enemy e);
+void draw_entity(WINDOW* play_win, Entity e, unsigned int color, char c);
 
 #endif

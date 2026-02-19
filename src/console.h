@@ -22,6 +22,12 @@
 #define VI_KEYS_W 'h'
 #define VI_KEYS_NW 'y'
 
+#define VOID ' '
+#define FLOOR '.'
+#define WALL '#'
+#define UP_STAIRS '<'
+#define DOWN_STAIRS '>'
+
 //initializes the console, including color and basic ncurses settings
 void init_console();
 

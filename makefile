@@ -8,7 +8,7 @@ BIN_DIR = bin
 
 all: $(BIN_DIR)/main
 
-$(BIN_DIR)/main: $(BUILD_DIR)/main.o $(BUILD_DIR)/player.o $(BUILD_DIR)/entities.o $(BUILD_DIR)/console.o
+$(BIN_DIR)/main: $(BUILD_DIR)/main.o $(BUILD_DIR)/dungen.o $(BUILD_DIR)/player.o $(BUILD_DIR)/entities.o $(BUILD_DIR)/console.o
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 

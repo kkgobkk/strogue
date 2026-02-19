@@ -6,22 +6,20 @@
 typedef struct _Player{
 	WINDOW* win;
 	WINDOW* msgbox;
-	int score;
 	int y;
 	int x;
 	int max_y;
 	int max_x;
-	char glyph;
 	unsigned int alive;
 } Player;
 
-Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x, char glyph);
+Player new_player(WINDOW* win, WINDOW* msgbox, int y, int x);
 
 int take_gold(WINDOW* msg_win, int* score);
 
 void kill_player(Player* p);
 
-int get_player_action(Player* p);
+int get_player_action(Player* p, short** map);
 
 void draw_player(Player p);
 
